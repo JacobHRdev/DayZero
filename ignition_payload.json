@@ -1,0 +1,43 @@
+{
+  "account_id": "acc_burnout_002",
+  "fecha_calculo": "2026-01-15",
+  "dia_observado": 15,
+  "parametros": {
+    "B0": 5000.0,
+    "mu": -266.52,
+    "sigma": 237.3,
+    "ventana_dias": 7
+  },
+  "prediccion": {
+    "dia_esperado_quiebra": 18.76,
+    "intervalo_confianza_90": [
+      13.15,
+      25.69
+    ],
+    "intervalo_confianza_50": [
+      16.01,
+      21.09
+    ]
+  },
+  "riesgo": {
+    "fecha_finiquito": "2026-01-18",
+    "prob_quiebra_antes_finiquito": 0.46,
+    "umbral_alerta": 0.35,
+    "estado": "riesgo_alto",
+    "webhook_disparado": true
+  },
+  "serie_saldo": [
+    {
+      "dia": 0,
+      "saldo": 5000.0
+    },
+    {
+      "dia": 1,
+      "saldo": 4982.23
+    },
+    {
+      "dia": 15,
+      "saldo": 4733.48
+    }
+  ]
+}

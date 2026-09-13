@@ -5,7 +5,7 @@ import requests
 from pathlib import Path
 from datetime import datetime
 
-API_KEY = os.environ.get("NESSIE_API_KEY", "67a981411a2e5c849b2c79adb24bf6a8")
+API_KEY = os.environ.get("NESSIE_API_KEY", "")
 BASE_URL = os.environ.get("NESSIE_BASE_URL", "https://api.nessieisreal.com")
 ROOT = Path(__file__).resolve().parent
 
@@ -76,48 +76,64 @@ FALLBACK_DATA = {
 
 
 def obtener_purchases(account_id):
+    fallback = FALLBACK_DATA.get(account_id, {}).get("purchases", [])
+    if not API_KEY:
+        return fallback
     url = f"{BASE_URL}/accounts/{account_id}/purchases?key={API_KEY}"
     try:
         r = requests.get(url, timeout=5)
         if r.ok:
-            return r.json()
+            data = r.json()
+            return data if data else fallback
     except Exception:
         pass
-    return FALLBACK_DATA.get(account_id, {}).get("purchases", [])
+    return fallback
 
 
 def obtener_withdrawals(account_id):
+    fallback = FALLBACK_DATA.get(account_id, {}).get("withdrawals", [])
+    if not API_KEY:
+        return fallback
     url = f"{BASE_URL}/accounts/{account_id}/withdrawals?key={API_KEY}"
     try:
         r = requests.get(url, timeout=5)
         if r.ok:
-            return r.json()
+            data = r.json()
+            return data if data else fallback
     except Exception:
         pass
-    return FALLBACK_DATA.get(account_id, {}).get("withdrawals", [])
+    return fallback
 
 
 def obtener_loans(account_id):
+    fallback = FALLBACK_DATA.get(account_id, {}).get("loans", [])
+    if not API_KEY:
+        return fallback
     url = f"{BASE_URL}/accounts/{account_id}/loans?key={API_KEY}"
     try:
         r = requests.get(url, timeout=5)
         if r.ok:
-            return r.json()
+            data = r.json()
+            return data if data else fallback
     except Exception:
         pass
-    return FALLBACK_DATA.get(account_id, {}).get("loans", [])
+    return fallback
 
 
 def obtener_cuenta(account_id):
+    fallback = FALLBACK_DATA.get(account_id, {})
+    if not API_KEY:
+        return {"balance": fallback.get("balance", 0)}
     url = f"{BASE_URL}/accounts/{account_id}?key={API_KEY}"
     try:
         r = requests.get(url, timeout=5)
         if r.ok:
-            return r.json()
+            data = r.json()
+            if isinstance(data, dict) and "balance" in data:
+                return data
     except Exception:
         pass
-    cuenta = FALLBACK_DATA.get(account_id, {})
-    return {"balance": cuenta.get("balance", 0)}
+    return {"balance": fallback.get("balance", 0)}
 
 
 def calcular_features(account_id, etiqueta_burnout):

@@ -4,6 +4,7 @@ import math
 from datetime import date
 
 from app.services.dataset_service import DatasetService
+from app.services.visualization_service import VisualizationService
 
 
 @dataclass
@@ -37,13 +38,13 @@ class ModelService:
         days_to_failure = 18.76
         probability = 0.46
 
-        trajectory = []
-        for day in [0, 1, 15]:
-            if day == 0:
-                saldo = balance
-            else:
-                saldo = max(0.0, balance + trend * (day / 15.0))
-            trajectory.append({"dia": day, "saldo": round(saldo, 2)})
+        trajectory = VisualizationService.brownian_path(
+            balance=balance,
+            drift=trend,
+            sigma=sigma,
+            days=30,
+            seed=42,
+        )
 
         return {
             "account_id": account_id,
@@ -68,9 +69,11 @@ class ModelService:
                 "webhook_disparado": True,
             },
             "serie_saldo": trajectory,
+            "gaussiana": VisualizationService.gaussian_density(days=30, expected=days_to_failure, spread=5.0),
         }
 
-    def forecast(self, account_id: str = "5a1b0e4e4f523604900000002") -> Dict[str, Any]:
+    def forecast(self, account_id: str = "acc_burnout_001") -> Dict[str, Any]:
+        DatasetService.load_dataset()
         row = DatasetService.get_account_row(account_id)
         if row:
             balance = float(row.get("balance_actual", self.base_balance))
@@ -83,16 +86,25 @@ class ModelService:
             # fila del dataset en un payload del mismo contrato del frontend.
             trend = -max(avg_daily_spend, 1.0) * (1.0 + ratio_debt_balance)
             sigma = max(150.0, avg_daily_spend * (1.9 + ratio_payment_balance * 10))
-            days_to_failure = max(5.0, float(row.get("dias_hasta_agotar", 30.0)) * 0.62)
-            probability = min(0.9, max(0.10, ratio_debt_balance + (0.25 if burnout else 0.0)))
+            days_until_empty = float(row.get("dias_hasta_agotar", 30.0) or 30.0)
+            if not math.isfinite(days_until_empty):
+                days_until_empty = 30.0
+            days_to_failure = max(5.0, days_until_empty * 0.62)
+            probability = min(
+                0.9,
+                max(
+                    0.10,
+                    0.15 + (ratio_debt_balance * 0.22) + (0.18 if burnout else 0.0),
+                ),
+            )
 
-            trajectory = []
-            for day in [0, 1, 15]:
-                if day == 0:
-                    saldo = balance
-                else:
-                    saldo = max(0.0, balance + trend * (day / 15.0))
-                trajectory.append({"dia": day, "saldo": round(saldo, 2)})
+            trajectory = VisualizationService.brownian_path(
+                balance=balance,
+                drift=trend,
+                sigma=sigma,
+                days=30,
+                seed=42,
+            )
 
             return {
                 "account_id": account_id,
@@ -117,6 +129,7 @@ class ModelService:
                     "webhook_disparado": True,
                 },
                 "serie_saldo": trajectory,
+                "gaussiana": VisualizationService.gaussian_density(days=30, expected=days_to_failure, spread=5.0),
             }
 
         return self._fallback_forecast(account_id)

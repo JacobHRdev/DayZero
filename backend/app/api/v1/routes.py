@@ -1,4 +1,4 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, Query
 from fastapi.responses import JSONResponse
 
 from app.services.dataset_service import DatasetService
@@ -18,12 +18,12 @@ def health_check():
 
 
 @router.get("/ignition")
-def get_ignition():
-    payload = ModelService().forecast()
+def get_ignition(account_id: str = Query("acc_burnout_001")):
+    payload = ModelService().forecast(account_id)
     return JSONResponse(content=payload)
 
 
 @router.get("/generate")
-def generate_payload(account_id: str = "5a1b0e4e4f523604900000002"):
+def generate_payload(account_id: str = Query("acc_burnout_001")):
     payload = GeneratorService().generate(account_id)
     return JSONResponse(content=payload)

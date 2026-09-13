@@ -18,12 +18,12 @@ def health_check():
 
 
 @router.get("/api/ignition")
-def get_ignition(account_id: str = Query("5a1b0e4e4f523604900000002")):
+def get_ignition(account_id: str = Query("acc_burnout_001")):
     payload = ModelService().forecast(account_id)
     return JSONResponse(content=payload)
 
 
 @router.get("/api/generate")
-def generate_payload(account_id: str = Query("5a1b0e4e4f523604900000002")):
+def generate_payload(account_id: str = Query("acc_burnout_001")):
     payload = GeneratorService().generate(account_id)
     return JSONResponse(content=payload)

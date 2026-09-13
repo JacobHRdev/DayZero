@@ -81,10 +81,20 @@ function App() {
   const [activeItem, setActiveItem] = useState("Centro de Mando");
   const [isSidebarOpen, setSidebarOpen] = useState(false);
   const [ignitionData, setIgnitionData] = useState(ignitionMock);
+  const [accountId, setAccountId] = useState("acc_burnout_001");
+  const [isLoading, setIsLoading] = useState(false);
+  const [loadError, setLoadError] = useState("");
 
   useEffect(() => {
+    const controller = new AbortController();
     let isMounted = true;
-    fetch("http://127.0.0.1:8000/api/ignition")
+    setIsLoading(true);
+    setIgnitionData(null);
+    setLoadError("");
+    const apiBaseUrl = import.meta.env.VITE_API_URL || "http://127.0.0.1:8000";
+    fetch(`${apiBaseUrl}/api/generate?account_id=${encodeURIComponent(accountId)}`, {
+      signal: controller.signal
+    })
       .then((response) => {
         if (!response.ok) throw new Error("Ignition API unavailable");
         return response.json();
@@ -92,14 +102,20 @@ function App() {
       .then((payload) => {
         if (isMounted) setIgnitionData(payload);
       })
-      .catch(() => {
-        if (isMounted) setIgnitionData(ignitionMock);
+      .catch((error) => {
+        if (isMounted && error.name !== "AbortError") {
+          setLoadError(`No se pudo cargar ${accountId}: ${error.message}`);
+        }
+      })
+      .finally(() => {
+        if (isMounted) setIsLoading(false);
       });
 
     return () => {
       isMounted = false;
+      controller.abort();
     };
-  }, []);
+  }, [accountId]);
 
   return (
     <div className="min-h-screen bg-[#F5F5F7] text-slate-900">
@@ -120,9 +136,31 @@ function App() {
             >
               <Menu size={20} />
             </button>
+            <label className="ml-auto flex items-center gap-3 text-xs font-semibold uppercase tracking-[0.1em] text-slate-500">
+              Cuenta
+              <select
+                aria-label="Seleccionar cuenta"
+                className="rounded-full border border-[#B9B9B9] bg-white px-4 py-2 text-sm font-normal normal-case tracking-normal text-black"
+                disabled={isLoading}
+                onChange={(event) => setAccountId(event.target.value)}
+                value={accountId}
+              >
+                <option value="acc_burnout_001">acc_burnout_001</option>
+                <option value="acc_burnout_002">acc_burnout_002</option>
+                <option value="acc_normal_001">acc_normal_001</option>
+                <option value="acc_normal_002">acc_normal_002</option>
+              </select>
+            </label>
+            {loadError && <span className="ml-4 text-xs font-semibold text-[#A94148]">{loadError}</span>}
           </header>
           <section className="px-5 py-10 sm:px-8 lg:px-12 lg:py-14">
-            <DashboardViews activeItem={activeItem} data={ignitionData} />
+            {ignitionData ? (
+              <DashboardViews activeItem={activeItem} data={ignitionData} />
+            ) : (
+              <div className="rounded-[28px] border border-[#B9B9B9] bg-white p-8 text-sm text-slate-500">
+                {isLoading ? "Cargando la cuenta seleccionada..." : loadError}
+              </div>
+            )}
           </section>
         </main>
       </div>

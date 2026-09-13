@@ -1,5 +1,6 @@
 from pathlib import Path
 import json
+import sys
 import pandas as pd
 
 from app.core.config import PROJECT_ROOT, DATASET_PATH
@@ -18,6 +19,29 @@ class DatasetService:
 
     @staticmethod
     def load_dataset() -> pd.DataFrame:
+        source_paths = [PROJECT_ROOT / "cuentas_burnout.json", PROJECT_ROOT / "cuentas_normales.json"]
+        current_dataset = pd.read_csv(DATASET_PATH) if DATASET_PATH.exists() else pd.DataFrame()
+        dataset_is_empty = (
+            current_dataset.empty
+            or "gasto_total" not in current_dataset.columns
+            or (current_dataset["gasto_total"].fillna(0) == 0).all()
+        )
+        needs_refresh = (
+            not DATASET_PATH.exists()
+            or dataset_is_empty
+            or any(path.exists() and path.stat().st_mtime > DATASET_PATH.stat().st_mtime for path in source_paths)
+        )
+        if needs_refresh and all(path.exists() for path in source_paths):
+            if str(PROJECT_ROOT) not in sys.path:
+                sys.path.insert(0, str(PROJECT_ROOT))
+            from script import construir_dataframe
+
+            dataframe = construir_dataframe(
+                DatasetService.load_accounts("burnout"),
+                DatasetService.load_accounts("normal"),
+            )
+            dataframe.to_csv(DATASET_PATH, index=False)
+            return dataframe
         if DATASET_PATH.exists():
             return pd.read_csv(DATASET_PATH)
         return pd.DataFrame()

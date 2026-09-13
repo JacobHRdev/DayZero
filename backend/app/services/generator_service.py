@@ -13,7 +13,7 @@ class GeneratorService:
     def __init__(self, output_path: Path = PROJECT_ROOT / "ignition_payload.json"):
         self.output_path = output_path
 
-    def generate(self, account_id: str = "5a1b0e4e4f523604900000002") -> dict:
+    def generate(self, account_id: str = "acc_burnout_001") -> dict:
         model = ModelService()
         payload = model.forecast(account_id)
 
