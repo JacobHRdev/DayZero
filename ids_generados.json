@@ -1,0 +1,122 @@
+[
+  {
+    "customer_id": "customer_burnout_001",
+    "account_id": "acc_burnout_001",
+    "balance_final_estimado": 1200.0,
+    "con_burnout": true,
+    "loan": {
+      "status_code": 200,
+      "tipo": "business",
+      "monto": 1800.0,
+      "pago_mensual": 90.0
+    }
+  },
+  {
+    "customer_id": "customer_burnout_002",
+    "account_id": "acc_burnout_002",
+    "balance_final_estimado": 1300.0,
+    "con_burnout": true,
+    "loan": {
+      "status_code": 200,
+      "tipo": "business",
+      "monto": 2050.0,
+      "pago_mensual": 110.0
+    }
+  },
+  {
+    "customer_id": "customer_burnout_003",
+    "account_id": "acc_burnout_003",
+    "balance_final_estimado": 1400.0,
+    "con_burnout": true,
+    "loan": {
+      "status_code": 200,
+      "tipo": "business",
+      "monto": 2300.0,
+      "pago_mensual": 130.0
+    }
+  },
+  {
+    "customer_id": "customer_burnout_004",
+    "account_id": "acc_burnout_004",
+    "balance_final_estimado": 1500.0,
+    "con_burnout": true,
+    "loan": {
+      "status_code": 200,
+      "tipo": "business",
+      "monto": 2550.0,
+      "pago_mensual": 150.0
+    }
+  },
+  {
+    "customer_id": "customer_burnout_005",
+    "account_id": "acc_burnout_005",
+    "balance_final_estimado": 1600.0,
+    "con_burnout": true,
+    "loan": {
+      "status_code": 200,
+      "tipo": "business",
+      "monto": 2800.0,
+      "pago_mensual": 170.0
+    }
+  },
+  {
+    "customer_id": "customer_normal_001",
+    "account_id": "acc_normal_001",
+    "balance_final_estimado": 2800.0,
+    "con_burnout": false,
+    "loan": {
+      "status_code": 200,
+      "tipo": "student",
+      "monto": 900.0,
+      "pago_mensual": 40.0
+    }
+  },
+  {
+    "customer_id": "customer_normal_002",
+    "account_id": "acc_normal_002",
+    "balance_final_estimado": 2900.0,
+    "con_burnout": false,
+    "loan": {
+      "status_code": 200,
+      "tipo": "student",
+      "monto": 1000.0,
+      "pago_mensual": 46.0
+    }
+  },
+  {
+    "customer_id": "customer_normal_003",
+    "account_id": "acc_normal_003",
+    "balance_final_estimado": 3000.0,
+    "con_burnout": false,
+    "loan": {
+      "status_code": 200,
+      "tipo": "student",
+      "monto": 1100.0,
+      "pago_mensual": 52.0
+    }
+  },
+  {
+    "customer_id": "customer_normal_004",
+    "account_id": "acc_normal_004",
+    "balance_final_estimado": 3100.0,
+    "con_burnout": false,
+    "loan": {
+      "status_code": 200,
+      "tipo": "student",
+      "monto": 1200.0,
+      "pago_mensual": 58.0
+    }
+  },
+  {
+    "customer_id": "customer_normal_005",
+    "account_id": "acc_normal_005",
+    "balance_final_estimado": 3200.0,
+    "con_burnout": false,
+    "loan": {
+      "status_code": 200,
+      "tipo": "student",
+      "monto": 1300.0,
+      "pago_mensual": 64.0
+    }
+  }
+]

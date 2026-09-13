@@ -1,0 +1,11 @@
+account_id,balance_actual,num_transacciones,gasto_total,gasto_promedio_diario,aceleracion_gasto,deuda_total,pago_mensual_total,ratio_deuda_balance,ratio_pago_balance,dias_hasta_agotar,burnout
+acc_burnout_001,4200,0,0,0,0,0,0,0.0,0.0,,1
+acc_burnout_002,3600,0,0,0,0,0,0,0.0,0.0,,1
+acc_burnout_003,2800,0,0,0,0,0,0,0.0,0.0,,1
+acc_burnout_004,2400,0,0,0,0,0,0,0.0,0.0,,1
+acc_burnout_005,1950,0,0,0,0,0,0,0.0,0.0,,1
+acc_normal_001,5600,0,0,0,0,0,0,0.0,0.0,,0
+acc_normal_002,6800,0,0,0,0,0,0,0.0,0.0,,0
+acc_normal_003,6900,0,0,0,0,0,0,0.0,0.0,,0
+acc_normal_004,7100,0,0,0,0,0,0,0.0,0.0,,0
+acc_normal_005,7400,0,0,0,0,0,0,0.0,0.0,,0
